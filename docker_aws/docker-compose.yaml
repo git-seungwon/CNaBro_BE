@@ -1,0 +1,40 @@
+version: '3'
+services:
+  service:
+    image: nginx
+    ports:
+      - "8000:80"  # 외부에서 포트 8000으로 접속, Nginx 컨테이너의 포트 80으로 매핑
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - demo-app
+
+  db:
+    image: mysql:8.0
+    platform: linux/x86_64
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'demo'
+      TZ: 'Asia/Seoul'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    expose:
+      - "3306"
+
+  demo-app:
+    build: .
+    volumes:
+      - .dockervenv:/src/.venv
+      - .:/src
+    depends_on:
+      - db
+    expose:
+      - "8000" 
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+  
+volumes:
+  mysql_data:
+
+
