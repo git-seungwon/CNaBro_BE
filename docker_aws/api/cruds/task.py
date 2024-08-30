@@ -9,8 +9,7 @@ def create_task(db:Session, task_create:task_schema.TestCreate) -> task_model.Te
     task = task_model.Test(**task_create.dict())
     db.add(task) # DB에 튜플 추가 (저장이 안된 상태)
     db.commit() # DB의 트랜잭션 반영하기 (저장)
-    db.refresh(task) # DB 새로고침
-    print("테스트")
+    db.refresh(task) # DB 새로고침 (중요)
     return task
 
 def get_tasks_with_done(db: Session):
