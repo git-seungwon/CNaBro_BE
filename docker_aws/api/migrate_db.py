@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from api.models.task import Base
 
-DB_URL = "mysql+pymysql://admin:cnabrobe!@database.cd8wseaayh6t.ap-northeast-2.rds.amazonaws.com:3306/demo?charset=utf8"
+DB_URL = "database://admin:cnabrobe!@database.cd8wseaayh6t.ap-northeast-2.rds.amazonaws.com:3306?charset=utf8"
 
 engine = create_engine(DB_URL, echo=True)
 
