@@ -1,15 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from urllib.parse import quote
 
-# DB_URL = "mysql+pymysql://root@db:3306/demo?charset=utf8"
-# DB_URL = "mysql+pymysql://admin:cnabrobe!@database.cd8wseaayh6t.ap-northeast-2.rds.amazonaws.com:3306/demo?charset=utf8"
-DB_URL = "mysql+pymysql://admin:cnabrobe!@database.cd8wseaayh6t.ap-northeast-2.rds.amazonaws.com:3306?charset=utf8"
-
-#arn:aws:rds:ap-northeast-2:730335663316:db:database
-
-#mysql -u admin -p -h database.cd8wseaayh6t.ap-northeast-2.rds.amazonaws.com
-#dialect+driver://username:password@host:port/database
-
+user = "admin"
+pwd = "cnabrobe!"
+host = "database.cd8wseaayh6t.ap-northeast-2.rds.amazonaws.com"
+port = 3306
+DB_URL = f'mysql+pymysql://{user}:{quote(pwd)}@{host}:{port}/demo?charset=utf8mb4'
 
 db_engine = create_engine(DB_URL, echo=True)
 db_session = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
