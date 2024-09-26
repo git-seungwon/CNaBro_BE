@@ -8,12 +8,12 @@ import api.schemas.task as task_schema
 
 router = APIRouter()
 
-@router.get("/api/v1/tasks", response_model=list[task_schema.Test])
+@router.get("/api/v1/tasks", response_model=list[task_schema.user])
 async def list_tasks(db: Session=Depends(get_db)):
     return task_crud.get_tasks_with_done(db)
 
-@router.post("/api/v1/tasks", response_model=task_schema.TestCreateResponse)
-async def create_task(task_body: task_schema.TestCreate, db: Session=Depends(get_db)):
+@router.post("/api/v1/tasks", response_model=task_schema.userCreateResponse)
+async def create_task(task_body: task_schema.userCreate, db: Session=Depends(get_db)):
     return task_crud.create_task(db, task_body)
 
 @router.put("/tasks/{task_id}")
