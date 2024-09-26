@@ -12,6 +12,7 @@ class Test(Base):
     time = Column(DateTime, default=datetime.utcnow)
     tag = Column(String(20))
     score = Column(String(2)) """
+    
     id = Column(Integer, primary_key=True)
     time = Column(String(20))
     title = Column(String(128))

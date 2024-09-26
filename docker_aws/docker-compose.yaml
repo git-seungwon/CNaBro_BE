@@ -1,7 +1,7 @@
 version: '3'
 services:
   service:
-    image: nginx
+    image: nginx:1.21.5-alpine
     ports:
       - "80:80"  # 외부에서 포트 80으로 접속, Nginx 컨테이너의 포트 80으로 매핑
     volumes:

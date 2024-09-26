@@ -20,6 +20,7 @@ class TestBase(BaseModel):
     # contentMain: str | None = Field(None, example="미적분")
     # tag: str | None = Field(None, example="수학")
     # score: str | None = Field(None, example="10")
+    
     time : str | None = Field(None, example="2024-08-01 05:00:10")
     title : str | None = Field(None, example="미적분")
     tag : str | None = Field(None, example="수학")
