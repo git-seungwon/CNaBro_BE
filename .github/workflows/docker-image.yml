@@ -24,7 +24,7 @@ jobs:
       # 3. Docker 이미지 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
-          docker compose build
+          docker compose build demo-app
           docker push tmddnjs3369/cnabro_be:latest
           
       # 4. AWS EC2로 Rolling Deploy
