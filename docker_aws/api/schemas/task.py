@@ -3,6 +3,9 @@ from datetime import datetime
 
 from typing import List, Optional
 
+
+# ----- [ user models ] -----
+
 class user(BaseModel):
     user_nickname : Optional[str] 
     email : Optional[str]
@@ -13,14 +16,17 @@ class user(BaseModel):
     create_at : datetime
     updated_at : datetime
 
-class userCreate(user):
+class user_Create(user):
     pass
 
-class userCreateResponse(userCreate):   
+class user_Create_Response(user_Create):   
     user_id : int
 
     class Config:
         orm_mode = True
+
+
+# ----- [ note models ] -----
 
 class note(BaseModel):
     user_id : int
@@ -31,17 +37,26 @@ class note(BaseModel):
     edit_at : datetime
     score : Optional[str]
 
-class noteCreate(note):
+class note_Create(note):
     pass
 
-class noteCreateResponse(noteCreate):
+class note_Create_Response(note_Create):
     id : int
 
     class Config:
         orm_mode = True
 
+# ----- [ tag models ] -----
 
-
-class tag(BaseModel) :
+class tag(BaseModel):
     note_id : int
     tag_name : Optional[str]
+
+class tag_Create(tag):
+    pass
+
+class tag_Create_Response(tag_Create):
+    id : int
+
+    class Config:
+        orm_mode = True
