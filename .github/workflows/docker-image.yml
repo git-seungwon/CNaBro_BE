@@ -28,10 +28,13 @@ jobs:
           docker push tmddnjs3369/cnabro_be:latest
 
       # 4. AWS EC2로 Rolling Deploy
-      - name: Rolling Deploy to EC2
+      - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@3.36.117.123 << 'EOF'
-            cd /path/to/docker-compose/project
-            docker-compose pull
-            docker-compose up -d --no-deps --build demo-app
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
+          chmod 400 ec2_key.pem
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
+            screen -S docker -X quit || true
+
+            screen -S docker -d -m
+            screen -S docker -p 0 -X stuff 'cd /path/to/docker-compose/project && docker-compose down && docker-compose pull && docker-compose up -d\n'
           EOF
