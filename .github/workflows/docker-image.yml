@@ -38,3 +38,4 @@ jobs:
             screen -S docker -d -m
             screen -S docker -p 0 -X stuff 'cd /path/to/docker-compose/project && docker-compose down && docker-compose pull && docker-compose up -d\n'
           EOF
+
