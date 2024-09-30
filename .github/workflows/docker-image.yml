@@ -32,10 +32,11 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 400 ec2_key.pem
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF=
             screen -S docker -X quit || true
 
+            cd /path/to/project
             screen -S docker -d -m
-            screen -S docker -p 0 -X stuff 'cd /path/to/docker-compose/project && docker-compose down && docker-compose pull && docker-compose up -d\n'
+            screen -S docker -p 0 -X stuff 'docker-compose down && docker-compose pull && docker-compose up -d\n'
           EOF
 
