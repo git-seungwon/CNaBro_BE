@@ -26,7 +26,7 @@ jobs:
         run: |
           docker build -t tmddnjs3369/cnabro_be:latest .
           docker push tmddnjs3369/cnabro_be:latest
-          
+
       # 4. AWS EC2로 Rolling Deploy
       - name: Deploy to EC2
         run: |
@@ -37,7 +37,7 @@ jobs:
             cd ../project 
             screen -S docker -X quit || true
             screen -S docker -d -m
-            screen -S docker -p 0 -X stuff 'docker compose down && docker compose pull --no-cache && docker-compose up -d\n'
+            screen -S docker -p 0 -X stuff 'docker compose down && docker compose pull && docker-compose up -d\n'
             echo "Deployment completed"
           EOF
 
