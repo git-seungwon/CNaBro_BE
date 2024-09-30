@@ -33,6 +33,7 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 400 ec2_key.pem
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
+            sudo su
             cd ../project 
             screen -S docker -X quit || true
             screen -S docker -d -m
