@@ -51,4 +51,3 @@ jobs:
             screen -S docker -p 0 -X stuff 'docker compose down && docker compose build && docker compose up -d\n'
             echo "Deployment completed"
           EOF
-
