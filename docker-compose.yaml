@@ -10,6 +10,9 @@ services:
       - demo-app
 
   demo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: tmddnjs3369/cnabro_be:latest
     volumes:
       - ./.dockervenv:/src/.venv

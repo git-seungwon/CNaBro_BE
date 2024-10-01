@@ -36,6 +36,8 @@ jobs:
             Dockerfile \
             docker-compose.yaml \
             nginx.conf \
+            poetry.lock \
+            pyproject.toml \
             ubuntu@3.36.117.123:/home/project/ 
           
       # 5. AWS EC2로 Rolling Deploy
