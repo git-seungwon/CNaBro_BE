@@ -41,6 +41,7 @@ jobs:
             ubuntu@3.36.117.123:/home/project/
           
           scp -r -o StrictHostKeyChecking=no -i ec2_key.pem api/ ubuntu@3.36.117.123:/home/project/
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 "find /home/project/api -name '__pycache__' -type d -exec rm -rf {} + || true"
           
       # 5. AWS EC2로 Rolling Deploy
       - name: Deploy to EC2
