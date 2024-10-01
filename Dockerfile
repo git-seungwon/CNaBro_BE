@@ -12,4 +12,4 @@ COPY api /src/api
 RUN poetry config virtualenvs.in-project true
 RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
 
-ENTRYPOINT ["poetry", "run", "uvicorn", "app.main:app", "--proxy-headers", "--host", "0.0.0.0", "--reload"] 
+ENTRYPOINT ["poetry", "run", "uvicorn", "src.app.main:app", "--proxy-headers", "--host", "0.0.0.0", "--reload"] 
