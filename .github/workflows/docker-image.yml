@@ -38,6 +38,7 @@ jobs:
             nginx.conf \
             poetry.lock \
             pyproject.toml \
+            api \
             ubuntu@3.36.117.123:/home/project/ 
           
       # 5. AWS EC2로 Rolling Deploy
