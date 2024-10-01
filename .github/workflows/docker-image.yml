@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 400 ec2_key.pem
-          
+
           rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ec2_key.pem" --exclude='__pycache__/' \
             Dockerfile \
             docker-compose.yaml \
@@ -40,7 +40,11 @@ jobs:
             poetry.lock \
             pyproject.toml \
             api/ \
-            ubuntu@3.36.117.123:/home/project/
+            ubuntu@3.36.117.123:/tmp/
+
+          ssh -i ec2_key.pem ubuntu@3.36.117.123 << EOF
+            sudo mv /tmp/* /home/project/
+          EOF
 
       # 5. AWS EC2로 Rolling Deploy
       - name: Deploy to EC2
