@@ -1,10 +1,8 @@
 version: '3'
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: nginx:latest
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -17,6 +15,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: tmddnjs3369/cnabro_be:latest
+    container_name: demo_app
     volumes:
       - ./.dockervenv:/src/.venv
       - .:/src
