@@ -19,8 +19,10 @@ def get_tasks_with_done(db: Session):
             task_model.User.email,
             task_model.User.password,
             task_model.User.mobile_number,
-            task_model.User.login_at,
-            task_model.User.logout_at
+            task_model.User.login_at,   
+            task_model.User.logout_at,
+            task_model.User.create_at,
+            task_model.User.updated_at
         )
     )
     return result.all()

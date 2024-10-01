@@ -24,6 +24,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
+        order : stop-first
 
 volumes:
   mysql_data:

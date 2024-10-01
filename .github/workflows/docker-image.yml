@@ -24,9 +24,9 @@ jobs:
       # 3. Docker 이미지 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
-          docker build -t tmddnjs3369/cnabro_be:latest .
-          docker push tmddnjs3369/cnabro_be:latest
-
+          docker build -t ${{ secrets.DOCKER_BUILD_FILE }}:latest .
+          docker push ${{ secrets.DOCKER_BUILD_FILE }}:latest
+          
       # 4. 필요한 파일 EC2로 전송
       - name: Copy files to EC2
         run: |
@@ -47,8 +47,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
             sudo su
             cd /home/project
-            docker compose down || true
-            docker compose pull demo-app
-            docker compose up -d
-            echo "Deployment completed"
+    
+            screen -dmS docker-compose-session
+            screen -S docker-compose-session -p 0 -X stuff "docker compose down || true\n"
+            screen -S docker-compose-session -p 0 -X stuff "docker compose pull demo-app\n"
+            screen -S docker-compose-session -p 0 -X stuff "docker compose up -d\n"
           EOF
