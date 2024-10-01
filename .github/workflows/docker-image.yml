@@ -45,6 +45,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
+            sudo su
             cd /home/project
             docker compose down || true
             docker compose pull demo-app
