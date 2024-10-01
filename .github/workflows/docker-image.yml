@@ -36,7 +36,7 @@ jobs:
             Dockerfile \
             docker-compose.yaml \
             nginx.conf \
-            ubuntu@3.36.117.123:home/project/ 
+            ubuntu@3.36.117.123:/home/project/ 
           
       # 5. AWS EC2로 Rolling Deploy
       - name: Deploy to EC2
@@ -45,8 +45,6 @@ jobs:
           chmod 400 ec2_key.pem
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
             sudo su
-
-            rsync -av --exclude 'app/' ubuntu@3.36.117.123:/home/project/
             cd ../project 
             screen -S docker -X quit || true
             screen -S docker -d -m
