@@ -44,10 +44,9 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 400 ec2_key.pem
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
-            sudo su
-            cd ../project 
+            cd /home/project 
             screen -S docker -X quit || true
             screen -S docker -d -m
-            screen -S docker -p 0 -X stuff 'docker compose down && docker compose build && docker compose up -d\n'
+            screen -S docker -p 0 -X stuff 'docker compose down && docker compose build && docker compose up -d\n' 2>&1
             echo "Deployment completed"
-          EOF
+          EOF 
