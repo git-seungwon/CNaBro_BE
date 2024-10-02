@@ -22,7 +22,7 @@ class User(Base):
     jwt_recode = relationship("jwt_recode", back_populates="user")
     refresh_token = relationship("refresh_token", back_populates="user")
     agreement = relationship("agreement", back_populates="user")
-    login_log = relationship("Ulogin_log", backref="user")
+    login_log = relationship("login_log", back_populates="user")
 
 class Note(Base):
     __tablename__ = "note"
@@ -35,17 +35,19 @@ class Note(Base):
     creat_at = Column(DateTime)
     edit_time = Column(DateTime)
     score = Column(Integer)
+    
+    user = relationship("User", back_populates="note")
+    tag = relationship("tag", back_populates="note")
 
-    tag = relationship("tag", backref="note")
-
-
-class Tag(Base):
+class Tage(Base):
     __tablename__ = "tag"
 
     id = Column(Integer, primary_key=True)
     note_id = Column(Integer)
     tag_name = Column(String(8))
     
+    user = relationship("User", back_populates="tag")
+    note = relationship("note", back_populates="tag")
 
 class jwt_record(Base):
     __tablename__ = "jwt_record"
@@ -58,8 +60,8 @@ class jwt_record(Base):
     logout_at = Column(DateTime)
     create_at = Column(DateTime)
 
-
-
+    user = relationship("User", back_populates="jwt_recode")
+    refresh_token = relationship("refresh_token", back_populates="jwt_record")
 
 class refresh_token(Base):
     __tablename__ = "refresh_token"
@@ -71,9 +73,8 @@ class refresh_token(Base):
     expire_datetime = Column(DateTime)
     token_type = (Integer)
 
-    jwt_record = relationship("jwt_record", backref="refresh_token")
-
-    
+    user = relationship("User", back_populates="refresh_token")
+    jwt_record= relationship("jwt_recode", back_populates="refresh_token")
 
 class agreement(Base):
     __tablename__ = "agreement"
@@ -85,7 +86,7 @@ class agreement(Base):
     agree_sensitive = Column(Integer)
     create_at = Column(DateTime)
 
-    
+    user = relationship("User", back_populates="agreement")
 
 
 class login_log(Base):
@@ -96,7 +97,7 @@ class login_log(Base):
     login_at = Column(DateTime)
     login_ip = Column(String(50))
 
-
+    user = relationship("User", back_populates="login_log")
 
 
 
