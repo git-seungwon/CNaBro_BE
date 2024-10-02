@@ -47,9 +47,4 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
             sudo su
             cd /home/project
-    
-            screen -dmS docker-compose-session
-            screen -S docker-compose-session -p 0 -X stuff "docker compose down || true\n"
-            screen -S docker-compose-session -p 0 -X stuff "docker compose pull demo-app\n"
-            screen -S docker-compose-session -p 0 -X stuff "docker compose up -d\n"
           EOF

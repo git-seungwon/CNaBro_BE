@@ -26,8 +26,3 @@ def get_tasks_with_done(db: Session):
         )
     )
     return result.all()
-
-
-'''
-    time / title / tag / emoji
-'''
