@@ -21,7 +21,7 @@ class User(Base):
     tag = relationship("tag", back_populates="user")
     jwt_recode = relationship("jwt_recode", back_populates="user")
     refresh_token = relationship("refresh_token", back_populates="user")
-    agreement = relationship("agreement", back_populates="user")
+    agreement = relationship("agreement", back_populates="user", uselist=False)
     login_log = relationship("login_log", back_populates="user")
 
 class Note(Base):
@@ -37,9 +37,9 @@ class Note(Base):
     score = Column(Integer)
     
     user = relationship("User", back_populates="note")
-    tag = relationship("tag", back_populates="note")
+    tag = relationship("Tag", back_populates="note")
 
-class Tage(Base):
+class Tag(Base):
     __tablename__ = "tag"
 
     id = Column(Integer, primary_key=True)
@@ -60,7 +60,7 @@ class jwt_record(Base):
     logout_at = Column(DateTime)
     create_at = Column(DateTime)
 
-    user = relationship("User", back_populates="jwt_recode")
+    user = relationship("User", back_populates="jwt_record")
     refresh_token = relationship("refresh_token", back_populates="jwt_record")
 
 class refresh_token(Base):
@@ -74,7 +74,7 @@ class refresh_token(Base):
     token_type = (Integer)
 
     user = relationship("User", back_populates="refresh_token")
-    jwt_record= relationship("jwt_recode", back_populates="refresh_token")
+    jwt_record= relationship("jwt_record", back_populates="refresh_token")
 
 class agreement(Base):
     __tablename__ = "agreement"
