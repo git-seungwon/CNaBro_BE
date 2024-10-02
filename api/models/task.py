@@ -29,7 +29,8 @@ class Note(Base):
     edit_time = Column(DateTime)
     score = Column(Integer)
     
-    user = relationship("User", backref="addresses", order_by=id)
+    user = relationship("User", backref="note", order_by=id)
+    
 
 class Tage(Base):
     __tablename__ = "tag"
@@ -37,6 +38,9 @@ class Tage(Base):
     id = Column(Integer, primary_key=True)
     note_id = Column(Integer)
     tag_name = Column(String(8))
+    
+    user = relationship("User", backref="tag", order_by=id)
+    note = relationship("note", backref="tag")
 
 class jwt_record(Base):
     __tablename__ = "jwt_record"
@@ -49,6 +53,11 @@ class jwt_record(Base):
     logout_at = Column(DateTime)
     create_at = Column(DateTime)
 
+    user = relationship("User", backref="jwt_recode", order_by=id)
+    refresh_token = relationship("refresh_token", backref="jwt_record")
+
+
+
 class refresh_token(Base):
     __tablename__ = "refresh_token"
 
@@ -58,6 +67,8 @@ class refresh_token(Base):
     create_at = Column(DateTime)
     expire_datetime = Column(DateTime)
     token_type = (Integer)
+
+    user = relationship("User", backref="refresh_token", order_by=id)
 
 class agreement(Base):
     __tablename__ = "agreement"
@@ -69,6 +80,9 @@ class agreement(Base):
     agree_sensitive = Column(Integer)
     create_at = Column(DateTime)
 
+    user = relationship("User", backref="agreement", order_by=id)
+
+
 class login_log(Base):
     __tablename__ = "login_log"
 
@@ -76,6 +90,9 @@ class login_log(Base):
     user_id = Column(Integer, ForeignKey("user.user_id"))
     login_at = Column(DateTime)
     login_ip = Column(String(50))
+
+    user = relationship("User", backref="login_log", order_by=id)
+
 
 
 
