@@ -38,4 +38,14 @@ class Tage(Base):
     note_id = Column(Integer)
     tag_name = Column(String(8))
 
+class jwt_record(Base):
+    __tablename__ = "jwt_record"
+
+    id = Column(Integer, primary_key=True)
+    refresh_token_id = Column(Integer, ForeignKey)
+    user_id = Column(Integer, ForeignKey("user.user_id"))
+    ip_address = Column(String(20))
+    expire_datetime = Column(DateTime)
+    
+
 
