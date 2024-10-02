@@ -13,6 +13,8 @@ pwd = os.environ["pwd"]
 host = os.environ["host"]
 port = os.environ["port"]
 
+DB_URL = f'mysql+pymysql://{user}:{quote(pwd)}@{host}:{port}/demo?charset=utf8mb4'
+
 db_engine = create_engine(DB_URL, echo=True)
 db_session = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
