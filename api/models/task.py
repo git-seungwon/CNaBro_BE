@@ -38,4 +38,47 @@ class Tage(Base):
     note_id = Column(Integer)
     tag_name = Column(String(8))
 
+class jwt_record(Base):
+    __tablename__ = "jwt_record"
+
+    id = Column(Integer, primary_key=True)
+    refresh_token_id = Column(Integer, ForeignKey)
+    user_id = Column(Integer, ForeignKey("user.user_id"))
+    ip_address = Column(String(20))
+    expire_datetime = Column(DateTime)
+    logout_at = Column(DateTime)
+    create_at = Column(DateTime)
+
+class refresh_token(Base):
+    __tablename__ = "refresh_token"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.user_id"))
+    refresh_token = Column(type)
+    create_at = Column(DateTime)
+    expire_datetime = Column(DateTime)
+    token_type = (Integer)
+
+class agreement(Base):
+    __tablename__ = "agreement"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.user_id"))
+    agree_term = Column(Integer)
+    agree_privacy = Column(Integer)
+    agree_sensitive = Column(Integer)
+    create_at = Column(DateTime)
+
+class login_log(Base):
+    __tablename__ = "login_log"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.user_id"))
+    login_at = Column(DateTime)
+    login_ip = Column(String(50))
+
+
+
+
+
 
