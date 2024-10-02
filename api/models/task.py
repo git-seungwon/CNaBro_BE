@@ -17,6 +17,13 @@ class User(Base):
     create_at = Column(DateTime) 
     updated_at = Column(DateTime) 
 
+    note = relationship("note", back_populates="user")
+    tag = relationship("tag", back_populates="user")
+    jwt_recode = relationship("jwt_recode", back_populates="user")
+    refresh_token = relationship("refresh_token", back_populates="user")
+    agreement = relationship("agreement", back_populates="user")
+    login_log = relationship("Ulogin_log", backref="user")
+
 class Note(Base):
     __tablename__ = "note"
 
@@ -28,19 +35,17 @@ class Note(Base):
     creat_at = Column(DateTime)
     edit_time = Column(DateTime)
     score = Column(Integer)
-    
-    user = relationship("User", backref="note", order_by=id)
-    
 
-class Tage(Base):
+    tag = relationship("tag", backref="note")
+
+
+class Tag(Base):
     __tablename__ = "tag"
 
     id = Column(Integer, primary_key=True)
     note_id = Column(Integer)
     tag_name = Column(String(8))
     
-    user = relationship("User", backref="tag", order_by=id)
-    note = relationship("note", backref="tag")
 
 class jwt_record(Base):
     __tablename__ = "jwt_record"
@@ -53,8 +58,6 @@ class jwt_record(Base):
     logout_at = Column(DateTime)
     create_at = Column(DateTime)
 
-    user = relationship("User", backref="jwt_recode", order_by=id)
-    refresh_token = relationship("refresh_token", backref="jwt_record")
 
 
 
@@ -68,7 +71,9 @@ class refresh_token(Base):
     expire_datetime = Column(DateTime)
     token_type = (Integer)
 
-    user = relationship("User", backref="refresh_token", order_by=id)
+    jwt_record = relationship("jwt_record", backref="refresh_token")
+
+    
 
 class agreement(Base):
     __tablename__ = "agreement"
@@ -80,7 +85,7 @@ class agreement(Base):
     agree_sensitive = Column(Integer)
     create_at = Column(DateTime)
 
-    user = relationship("User", backref="agreement", order_by=id)
+    
 
 
 class login_log(Base):
@@ -91,7 +96,7 @@ class login_log(Base):
     login_at = Column(DateTime)
     login_ip = Column(String(50))
 
-    user = relationship("User", backref="login_log", order_by=id)
+
 
 
 
