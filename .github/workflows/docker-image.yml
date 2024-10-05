@@ -26,29 +26,3 @@ jobs:
         run: |
           docker build -t tmddnjs3369/cnabro_be:latest .
           docker push tmddnjs3369/cnabro_be:latest
-
-      # 4. 필요한 파일 EC2로 전송
-      - name: Copy files to EC2
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
-          chmod 400 ec2_key.pem
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i ec2_key.pem" --exclude='__pycache__/' --exclude='api/' \
-            Dockerfile \
-            docker-compose.yaml \
-            nginx.conf \
-            poetry.lock \
-            pyproject.toml \
-            ubuntu@3.36.117.123:/home/project/
-
-
-      # 5. AWS EC2로 Rolling Deploy
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@3.36.117.123 << EOF
-            sudo su
-            cd /home/project
-            docker compose down || true
-            docker compose pull demo-app
-            docker compose up -d
-            echo "Deployment completed"
-          EOF
