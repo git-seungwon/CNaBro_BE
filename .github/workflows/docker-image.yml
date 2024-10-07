@@ -48,4 +48,4 @@ jobs:
           script: |
             sudo su
             cd ../project
-            sh deploy.sh
+            sudo sh deploy.sh
