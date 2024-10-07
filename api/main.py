@@ -4,5 +4,5 @@ import os
 app = FastAPI()
 
 @app.get("/version")
-def root():
+def root(): # test code
     return {"version": os.getenv("version")}
