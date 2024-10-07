@@ -9,4 +9,4 @@ def root():
 
 @app.get("/")
 def main():
-    return {"message": "hello main_page!"}
+    return {"message": "new pages!"}
