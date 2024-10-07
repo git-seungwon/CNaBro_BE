@@ -6,10 +6,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
+    depends_on: # 컨테이너 종속성을 표시하는 것이 아닌 demo-app을 먼저 실행하고 실행하라는 뜻
       - demo-app
 
-  demo-app:
+  demo-app: 
     build: .
     image: tmddnjs3369/cnabro_be:latest
     volumes:
