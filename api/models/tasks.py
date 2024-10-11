@@ -9,8 +9,8 @@ class User(Base):
     __tablename__ = 'user'
     
     user_id = Column(Integer, primary_key=True, autoincrement=True, comment='유저고유번호')
-    user_nickname = Column(String(10), nullable=False, comment='유저 닉네임')
-    email = Column(String(30), nullable=False, comment='유저 이메일')
+    user_nickname = Column(String(20), nullable=False, comment='유저 닉네임')
+    email = Column(String(320), nullable=False, comment='유저 이메일')
     password = Column(String(20), nullable=True, comment='유저 비밀번호')
     mobile_number = Column(String(11), nullable=False, comment='유저 전화번호')
     create_at = Column(DateTime, server_default=func.now(), nullable=False, comment='생성시각')
