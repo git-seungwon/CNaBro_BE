@@ -3,8 +3,8 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from starlette import status
 
-from database import get_db
-from domain.user import user_crud, user_schemas
+from api.database import get_db
+from api.domain.user import user_crud, user_schemas
 
 router = APIRouter(
     prefix="api/user",
