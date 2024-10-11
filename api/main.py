@@ -6,3 +6,8 @@ app = FastAPI()
 @app.get("/version")
 def root():
     return {"version": os.getenv("version")}
+
+
+@app.get("/")
+def main():
+    return {"message": "main_page!"}
