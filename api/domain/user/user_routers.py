@@ -7,9 +7,8 @@ from api.database import get_db
 from api.domain.user import user_crud, user_schemas
 
 router = APIRouter(
-    prefix="api/user",
+    prefix="/api/user",
 )
-
 
 @router.post("/create", status_code=status.HTTP_204_NO_CONTENT)
 def user_create(_user_create: user_schemas.UserCreate, db: Session = Depends(get_db)):
