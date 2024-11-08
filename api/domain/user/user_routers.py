@@ -18,7 +18,7 @@ ALGORITHM = os.getenv("ALGORITHM")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
 
 router = APIRouter(
-    prefix="/api.v1",
+    prefix="/api/v1",
 )
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED, tags=["login"])
