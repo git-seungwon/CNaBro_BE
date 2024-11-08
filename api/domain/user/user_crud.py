@@ -10,10 +10,9 @@ from api.models.tasks import User
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 async def create_user(db: AsyncSession, user_create: UserCreate):
-    db_user = User(nickname=user_create.username,
-                   pwd=pwd_context.hash(user_create.password1),
-                   email=user_create.email,
-                   gender=user_create.gender)
+    db_user = User(user_nickname=user_create.username,
+                   password=pwd_context.hash(user_create.password1),
+                   email=user_create.email)
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
