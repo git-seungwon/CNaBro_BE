@@ -8,6 +8,12 @@ from api.database import Base
 class User(Base):
     __tablename__ = 'user'
     
+    '''
+        필수 데이터
+
+        user_nickname, email, mobile_number, last_login_datetime, last_login_IP, email_agreement
+    '''
+
     user_id = Column(Integer, primary_key=True, autoincrement=True, comment='유저고유번호')
     user_nickname = Column(String(20), nullable=False, comment='유저 닉네임')
     email = Column(String(320), nullable=False, comment='유저 이메일')
@@ -29,7 +35,13 @@ class User(Base):
 
 class Note(Base):
     __tablename__ = 'note'
-    
+
+    '''
+        필수 데이터
+
+        user_id, content, start_time, end_time
+    '''
+
     id = Column(Integer, primary_key=True, autoincrement=True, comment='노트 고유번호')
     user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False, comment='유저고유번호')
     content = Column(Text, nullable=False, comment='노트 내용')
@@ -37,7 +49,7 @@ class Note(Base):
     end_time = Column(TIMESTAMP, nullable=False, comment='종료 시간')
     create_at = Column(TIMESTAMP, server_default=func.now(), nullable=False, comment='생성시각')
     edit_at = Column(TIMESTAMP, nullable=True, comment='수정 시각')
-    score = Column(LargeBinary(2), nullable=False, default=0, comment='점수')
+    score = Column(LargeBinary(2), nullable=False, default=0, comment='집중 단계를 0~3까지 4단계를 2비트로 표현')
 
     user = relationship("User", back_populates="notes")
     tags = relationship("Tag", back_populates="note")
@@ -45,6 +57,12 @@ class Note(Base):
 
 class Tag(Base):
     __tablename__ = 'tag'
+
+    '''
+        필수 데이터
+
+        note_id, tag_name
+    '''
     
     id = Column(Integer, primary_key=True, autoincrement=True, comment='태그 고유번호')
     note_id = Column(Integer, ForeignKey('note.id'), nullable=False, comment='노트 고유번호')
@@ -56,6 +74,12 @@ class Tag(Base):
 class RefreshToken(Base):
     __tablename__ = 'refresh_token'
     
+    '''
+        필수 데이터
+
+        user_id, refresh_token, create_at, expire_datetime
+    '''
+
     id = Column(Integer, primary_key=True, autoincrement=True, comment='리프레쉬토큰 고유번호')
     user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False, comment='유저고유번호')
     refresh_token = Column(String(255), nullable=False, comment='리프레쉬토큰')
@@ -69,6 +93,12 @@ class RefreshToken(Base):
 class Agreement(Base):
     __tablename__ = 'agreement'
     
+    '''
+        필수 데이터
+
+        user_id
+    '''
+
     id = Column(Integer, primary_key=True, autoincrement=True, comment='동의 고유번호')
     user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False, comment='유저고유번호')
     agree_term = Column(Integer, nullable=True, default=0, comment='이용약관 동의 여부')
@@ -81,6 +111,7 @@ class Agreement(Base):
 
 class JWTRecord(Base):
     __tablename__ = 'jwt_record'
+    
     
     id = Column(Integer, primary_key=True, autoincrement=True, comment='발급 고유번호')
     refresh_token_id = Column(Integer, ForeignKey('refresh_token.id'), nullable=False, comment='리프레쉬토큰 고유번호')
