@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from api.database import get_db
-from api.domain.user import user_crud, user_schemas
+from api.domain.user import user_crud, user_schema
 from api.domain.user.user_crud import pwd_context
 
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
@@ -21,25 +21,19 @@ router = APIRouter(
     prefix="/api/v1",
 )
 
-@router.post("/signup", status_code=status.HTTP_201_CREATED, tags=["login"])
-async def user_create(_user_create: user_schemas.UserCreate, db: AsyncSession = Depends(get_db)):
+@router.post("/signup", status_code=status.HTTP_204_NO_CONTENT, tags=["login"])
+async def user_create(_user_create: user_schema.UserCreate, db: AsyncSession = Depends(get_db)):
     user = await user_crud.get_existing_user(db, user_create=_user_create)
     if user:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                            detail="이미 존재하는 사용자입니다.")
-    await user_crud.create_user(db=db, user_create=_user_create)
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="이미 존재하는 사용자입니다.")
     
-    create_user = await user_crud.get_user(db=db, username=_user_create.username)
-    return {
-        "user_id": create_user.user_id,
-        "message": "회원가입이 완료되었습니다."
-    }
+    await user_crud.create_user(db=db, user_create=_user_create)
 
-@router.post("/login", response_model=user_schemas.Token, tags=["login"])
+@router.post("/login", response_model=user_schema.Token, tags=["login"])
 async def login_for_access_token(form_data:OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
 
     user = await user_crud.get_user_by_email(db, form_data.username)
-    if user is None or not pwd_context.verify(form_data.password, user.pwd):
+    if user is None or not pwd_context.verify(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="이메일 또는 비밀번호가 잘못 입력되었습니다.",

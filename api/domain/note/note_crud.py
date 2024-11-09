@@ -4,7 +4,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from api.models.tasks import Note, User
-from api.domain.note import note_schemas
+from api.domain.note import note_schema
 
 async def search_notes(db: AsyncSession, user: User, skip: int = 0, limit: int = 10, keyword: str = ''):
     query = select(Note).filter(Note.user_id == user.user_id)
@@ -25,13 +25,13 @@ async def get_note(db: AsyncSession, note_id: int):
     qeustion = await db.execute(select(Note).filter(Note.id == note_id))
     return qeustion.scalar_one_or_none()
 
-async def create_note(db: AsyncSession, note_create: note_schemas.NoteCreate, user: User):
+async def create_note(db: AsyncSession, note_create: note_schema.NoteCreate, user: User):
     db_note = Note(content=note_create.content, user_id=user.user_id)
     db.add(db_note)
     await db.commit()
     await db.refresh(db_note)
 
-async def update_note(db: AsyncSession, db_note: Note, note_update: note_schemas.NoteUpdate):
+async def update_note(db: AsyncSession, db_note: Note, note_update: note_schema.NoteUpdate):
     if note_update.content is not None:   
         db_note.content = note_update.content
     db_note.edit_at = datetime.now()

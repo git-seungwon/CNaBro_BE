@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.domain.user.user_schemas import UserCreate
+from api.domain.user.user_schema import UserCreate
 from api.models.tasks import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

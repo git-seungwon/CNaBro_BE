@@ -1,5 +1,6 @@
 
 from pydantic import BaseModel, EmailStr, field_validator
+from enum import Enum
 
 class LoginRequest(BaseModel):
     email: str
@@ -47,3 +48,7 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+class SnsType(str, Enum):
+    email: str = "email"
+    google: str = "google"

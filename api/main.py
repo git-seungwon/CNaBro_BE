@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 import os
 
-from api.domain.user import user_routers
-from api.domain.note import note_routers
+from api.domain.user import user_router
+from api.domain.note import note_router
 
 app = FastAPI()
 
@@ -10,5 +10,5 @@ app = FastAPI()
 def root():
     return {"version": os.getenv("version")}
 
-app.include_router(user_routers.router)
-app.include_router(note_routers.router)
+app.include_router(user_router.router)
+app.include_router(note_router.router)
