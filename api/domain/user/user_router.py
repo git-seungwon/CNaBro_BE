@@ -15,6 +15,7 @@ from starlette.responses import RedirectResponse
 from api.database import get_db
 from api.domain.user import user_crud, user_schema, user_login_handler
 from api.domain.user.user_crud import pwd_context
+from api.models import ORM
 
 # google Oauth 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -104,53 +105,7 @@ async def auth_callback(provider: user_schema.SnsType, code: str, db: AsyncSessi
                 raise HTTPException(status_code=400, detail="인증 실패")
         case _:
             raise HTTPException(status_code=400, detail="Invalid provider")
- 
-async def get_user_from_email_token(token: str, db: AsyncSession):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="access token의 정보가 잘못되었습니다.",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
 
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        exp = payload.get("exp")
-        if datetime.now() >= exp:
-            # 토큰 만료로 인한 재발급
-            pass
-
-        user_id: str = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
-        else:
-            user = await user_crud.get_user_by_userid(db, user_id=int(user_id))
-            if user is None:
-                raise credentials_exception
-            return user
-
-    except JWTError:
-        raise credentials_exception
-    
-async def get_user_from_google_token(token: str, db: AsyncSession):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="access token의 정보가 잘못되었습니다.",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
-    try:
-        payload = jwt.decode(token, GOOGLE_CLIENT_SECRET)
-        user_id: str = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
-        else:
-            user = await user_crud.get_user_by_userid(db, user_id=int(user_id))
-            if user is None:
-                raise credentials_exception
-            return user
-    except JWTError:
-        raise credentials_exception
-    
 async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -187,3 +142,8 @@ async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = De
 
     except JWTError:
         raise credentials_exception
+
+@router.delete("/signout", status_code=status.HTTP_204_NO_CONTENT, tags=["login"])
+async def user_delete(db: AsyncSession = Depends(get_db),
+                   current_user:ORM.User = Depends(get_current_user)):
+    await user_crud.delete_user(db=db, current_user=current_user)

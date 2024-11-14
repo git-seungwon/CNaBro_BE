@@ -9,6 +9,10 @@ from api.models.ORM import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+async def delete_user(db: AsyncSession, current_user:User):
+    await db.delete(current_user)
+    await db.commit()
+
 async def create_user(db: AsyncSession, user_create: UserCreate):
     db_user = User(nickname=user_create.nickname,
                    password=pwd_context.hash(user_create.password1),
