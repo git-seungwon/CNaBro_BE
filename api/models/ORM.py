@@ -11,15 +11,27 @@ class User(Base):
     '''
         필수 데이터
 
-        user_nickname, email, mobile_number, last_login_datetime, last_login_IP, email_agreement
-    '''
+        [email 로그인]
+            provider_type
+            nickname
+            email
+            password
+            create_at
+
+        [google 로그인]
+            provider_id
+            provider_type
+            nickname
+            email
+            create_at
+    ''' 
 
     user_id = Column(Integer, primary_key=True, autoincrement=True, comment='유저고유번호')
-    provider_id = Column(Integer, nullable=True, comment="OaOauth 제공자가 local이 아닌 경우에만 작성")
+    provider_id = Column(String(30), nullable=True, comment="OaOauth 제공자가 local이 아닌 경우에만 작성")
     provider_type = Column(String(20), nullable=False, comment="Oauth 제공자 정보")
     nickname = Column(String(20), nullable=False, comment='유저 닉네임')
-    email = Column(String(320), nullable=False, comment='유저 이메일')
-    password = Column(String(20), nullable=True, comment='유저 비밀번호')
+    email = Column(String(100), nullable=False, comment='유저 이메일')
+    password = Column(String(60), nullable=True, comment='유저 비밀번호')
     create_at = Column(DateTime, server_default=func.now(), nullable=False, comment='생성시각')
     update_at = Column(DateTime, nullable=True, comment='최종수정시각')
     profile_url = Column(String(255), nullable=True, comment='프로필 사진 주소')

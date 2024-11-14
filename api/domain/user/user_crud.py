@@ -4,15 +4,25 @@ from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.domain.user.user_schema import UserCreate
+from api.domain.user.user_schema import UserCreate, SocialMember
 from api.models.ORM import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 async def create_user(db: AsyncSession, user_create: UserCreate):
-    db_user = User(user_nickname=user_create.username,
+    db_user = User(nickname=user_create.nickname,
                    password=pwd_context.hash(user_create.password1),
-                   email=user_create.email)
+                   email=user_create.email,
+                   provider_type="email")
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+
+async def create_social_user(db: AsyncSession, user_create: SocialMember):
+    db_user = User(nickname=user_create.nickname,
+                   email=user_create.email,
+                   provider_type=user_create.provider.name,
+                   provider_id=int(user_create.provider_id))
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
@@ -20,14 +30,14 @@ async def create_user(db: AsyncSession, user_create: UserCreate):
 async def get_existing_user(db: AsyncSession, user_create: UserCreate):
     result: Result = await db.execute(
         select(User).filter(
-            (User.user_nickname == user_create.username) |
+            (User.nickname == user_create.nickname) |
             (User.email == user_create.email)
         )
     )
     return result.scalars().all()
 
-async def get_user(db: AsyncSession, username: str) -> User:
-    result : Result = await db.execute(select(User).filter(User.user_nickname == username))
+async def get_user(db: AsyncSession, nickname: str) -> User:
+    result : Result = await db.execute(select(User).filter(User.nickname == nickname))
     return result.scalar_one_or_none()
 
 async def get_user_by_userid(db: AsyncSession, user_id: int) -> User:
@@ -38,4 +48,6 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User:
     result : Result = await db.execute(select(User).filter(User.email == email))
     return result.scalar_one_or_none()
 
-
+async def get_user_by_sub(db: AsyncSession, sub: str) -> User:
+    result : Result = await db.execute(select(User).filter(User.provider_id == sub))
+    return result.scalar_one_or_none()
