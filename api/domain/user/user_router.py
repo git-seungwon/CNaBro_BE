@@ -35,15 +35,6 @@ google_oauth2_scheme = OAuth2AuthorizationCodeBearer(
     scopes={"email": "email", "profile": "profile", "openid": "openid"}
 )
 
-class AuthDependencies:
-    def __init__(
-        self,
-        dep1: Annotated[str, Depends(oauth2_scheme)],
-        dep2: Annotated[str, Depends(google_oauth2_scheme)]
-    ):
-        self.dep1 = dep1
-        self.dep2 = dep2
-
 router = APIRouter(
     prefix="/api/v1",   
 )
@@ -160,8 +151,44 @@ async def get_user_from_google_token(token: str, db: AsyncSession):
     except JWTError:
         raise credentials_exception
     
-async def get_current_user(auth: Annotated[AuthDependencies, Depends()], db: AsyncSession = Depends(get_db)):
-    return await get_user_from_email_token(auth, db)
+async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="access token의 정보가 잘못되었습니다.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        exp = payload.get("exp")
+        if datetime.now() >= exp:
+            # 토큰 만료로 인한 재발급
+            pass
+
+        provider_type = payload.get("provider_type")
+        user_id: str = payload.get("sub")
+        if provider_type == user_schema.SnsType.google:
+            if user_id is None:
+                raise credentials_exception
+            else:
+                user = await user_crud.get_user_by_sub(db, sub=int(user_id))
+                if user is None:
+                    raise credentials_exception
+                return user
+
+        else:
+            if user_id is None:
+                raise credentials_exception
+            else:
+                user = await user_crud.get_user_by_userid(db, user_id=int(user_id))
+                if user is None:
+                    raise credentials_exception
+                return user
+
+    except JWTError:
+        raise credentials_exception
+    
+
     # try:
     #     return await get_user_from_email_token(auth, db)
     # except:
