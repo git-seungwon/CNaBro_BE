@@ -160,10 +160,10 @@ async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = De
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        exp = payload.get("exp")
-        if datetime.now() >= exp:
-            # 토큰 만료로 인한 재발급
-            pass
+        # exp = payload.get("exp")
+        # if datetime.now() >= exp:
+        #     # 토큰 만료로 인한 재발급
+        #     pass
 
         provider_type = payload.get("provider_type")
         user_id: str = payload.get("sub")
@@ -187,16 +187,3 @@ async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = De
 
     except JWTError:
         raise credentials_exception
-    
-
-    # try:
-    #     return await get_user_from_email_token(auth, db)
-    # except:
-    #     try:
-    #         return await get_user_from_google_token(auth. db)
-    #     except:
-    #         raise HTTPException(
-    #             status_code=status.HTTP_401_UNAUTHORIZED,
-    #             detail="인증 정보가 제공되지 않았습니다.",
-    #             headers={"WWW-Authenticate": "Bearer"},
-    #         )
