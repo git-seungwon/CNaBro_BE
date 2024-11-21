@@ -143,6 +143,6 @@ class LoginLog(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True, comment='로그인 기록 고유번호')
     user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False, comment='유저고유번호')
-    login_at = Column(DateTime, nullable=False, comment='로그인 시각')
+    login_at = Column(TIMESTAMP, nullable=False, server_default=func.now(), comment='로그인 시각')
 
     user = relationship("User", back_populates="login_logs")
