@@ -104,7 +104,7 @@ async def auth_callback(provider: user_schema.SnsType, code: str, db: AsyncSessi
         case _:
             raise HTTPException(status_code=400, detail="Invalid provider")
 
-async def get_current_user(token = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+async def get_current_user(token = Depends(oauth2_scheme), token2 = Depends(google_oauth2_scheme), db: AsyncSession = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="access token의 정보가 잘못되었습니다.",
@@ -147,7 +147,7 @@ async def user_delete(db: AsyncSession = Depends(get_db),
                    current_user:ORM.User = Depends(get_current_user)):
     await user_crud.delete_user(db=db, current_user=current_user)
 
-@router.get("/user",response_model=user_schema.User, tags=["user"])
+@router.get("/user",response_model=user_schema.response_user, tags=["user"])
 async def get_user(db: AsyncSession = Depends(get_db),
                    current_user:ORM.User = Depends(get_current_user)):
     user= await user_crud.get_user_by_userid(db, user_id=current_user.user_id)
@@ -167,10 +167,10 @@ async def get_user_update(_user_update:user_schema.userupdate, db: AsyncSession 
     if not db_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="데이터를 찾을 수 없습니다.")
-    if current_user.user_id != db_user.nickname:
+    if current_user.user_id != db_user.user_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="수정 권한이 없습니다.")
     
     await user_crud.get_user_update(db=db, db_user=db_user, user_update=_user_update)
-    user_update= await user_crud.get_user_update(db, user_id=current_user.user_id)
+    user_update = await user_crud.get_user(db, nickname=current_user.nickname)
     return user_update

@@ -2,6 +2,7 @@
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional, Union
 from enum import Enum
+import datetime
     
 class UserCreate(BaseModel):
     ''' email 회원가입 '''
@@ -60,3 +61,15 @@ class SocialMember(BaseModel):
 
 class userupdate(BaseModel):
     nickname: str
+
+
+class response_user(BaseModel):
+    user_id : int
+    provider_id : str | None = None
+    provider_type : str
+    nickname : str
+    email : str
+    password : str | None = None
+    create_at : datetime.datetime
+    update_at : datetime.datetime | None = None
+    profile_url : str | None = None
