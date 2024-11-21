@@ -63,6 +63,8 @@ async def login_for_access_token(form_data:OAuth2PasswordRequestForm = Depends()
         }
         access_token = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
+        await user_crud.create_loginlog(db=db, user=user)
+
         return user_schema.Token(
             user_id=user.user_id,
             access_token=access_token,
@@ -85,7 +87,7 @@ async def auth_callback(provider: user_schema.SnsType, code: str, db: AsyncSessi
         case "google":
             auth_google:user_schema.SocialMember = await user_login_handler.auth_google(code)
             if auth_google is not None:
-                user_sub = auth_google.provider_id
+                user_sub = auth_google["sub"]
                 user_data = await user_crud.get_user_by_sub(db, user_sub)
 
                 if not user_data:
@@ -93,12 +95,15 @@ async def auth_callback(provider: user_schema.SnsType, code: str, db: AsyncSessi
                 user_info = await user_crud.get_user_by_sub(db, user_sub)
 
                 access_token = jwt.encode(auth_google, SECRET_KEY, algorithm=ALGORITHM)
+                
+                await user_crud.create_loginlog(db=db, user=user_info)
 
                 return user_schema.Token(
                     user_id=user_info.user_id,
                     access_token=access_token,
                     token_type="Bearer"
                 )
+            
             else:
                 raise HTTPException(status_code=400, detail="인증 실패")
         case _:

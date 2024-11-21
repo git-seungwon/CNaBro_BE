@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.domain.user.user_schema import UserCreate, SocialMember
 from api.models.ORM import User
 from api.domain.user import user_schema
+from api.models.ORM import LoginLog
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -63,3 +64,9 @@ async def get_user_update(db:AsyncSession, db_user:User, user_update: user_schem
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
+
+async def create_loginlog(db: AsyncSession,  user: User):
+    db_log = LoginLog(user_id=user.user_id)
+    db.add(db_log)
+    await db.commit()
+    await db.refresh(db_log)
