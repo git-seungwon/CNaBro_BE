@@ -43,7 +43,7 @@ async def note_create(_note_create: note_schema.NoteCreate, db: AsyncSession = D
     await note_crud.create_note(db=db, note_create=_note_create, user=current_user)
 
 # 노트 업데이트
-@router.patch("/notes/update", status_code=status.HTTP_200_OK, tags=["notes"])
+@router.put("/notes/update", status_code=status.HTTP_200_OK, tags=["notes"])
 async def note_update(_note_update: note_schema.NoteUpdate, db: AsyncSession = Depends(get_db),
                           current_user:ORM.User = Depends(user_router.get_current_user)):
     db_note = await note_crud.get_note(db, note_id=_note_update.note_id)
