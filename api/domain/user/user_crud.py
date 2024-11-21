@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.domain.user.user_schema import UserCreate, SocialMember
 from api.models.ORM import User
+from api.domain.user import user_schema
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -55,3 +56,10 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User:
 async def get_user_by_sub(db: AsyncSession, sub: str) -> User:
     result : Result = await db.execute(select(User).filter(User.provider_id == sub))
     return result.scalar_one_or_none()
+
+async def get_user_update(db:AsyncSession, db_user:User, user_update: user_schema.userupdate):
+    if user_update.nickname is not None:   
+        db_user.nickname = user_update.nickname
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)

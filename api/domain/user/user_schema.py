@@ -57,3 +57,6 @@ class SocialMember(BaseModel):
     nickname: Optional[str] = None
     provider: Union[str, SnsType]
     provider_id: int
+
+class userupdate(BaseModel):
+    nickname: str
