@@ -36,9 +36,7 @@ google_oauth2_scheme = OAuth2AuthorizationCodeBearer(
     scopes={"email": "email", "profile": "profile", "openid": "openid"}
 )
 
-router = APIRouter(
-    prefix="/api/v1",   
-)
+router = APIRouter(prefix="/api/v1")
 
 @router.post("/signup", status_code=status.HTTP_204_NO_CONTENT, tags=["login"])
 async def user_create(_user_create: user_schema.UserCreate, db: AsyncSession = Depends(get_db)):

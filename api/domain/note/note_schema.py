@@ -23,7 +23,8 @@ class NoteCreate(BaseModel):
     ''' 노트 생성 시 필수로 작성해야 하는 항목, user_id는 JWT 토큰 내부에 들어 있기 때문에 제외. '''
     content: str
     start_time: datetime.datetime
-
+    end_time: datetime.datetime
+    
     @field_validator('content', mode='before')
     def not_empty(cls, v):
         if not v or not v.strip():

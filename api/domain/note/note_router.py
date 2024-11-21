@@ -6,14 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from api.database import get_db
-from api.domain.user import user_crud, user_router
+from api.domain.user import user_router
 from api.models import ORM
-
 from api.domain.note import note_crud, note_schema
 
-router = APIRouter(
-    prefix="/stack/api/v1",
-)
+router = APIRouter(prefix="/api/v1")
 
 # 전체 노트 조회
 @router.get("/notes", response_model=note_schema.NoteList, tags=["notes"])
@@ -60,7 +57,6 @@ async def note_update(_note_update: note_schema.NoteUpdate, db: AsyncSession = D
     await note_crud.update_note(db=db, db_note=db_note, note_update=_note_update)
     update_note = await note_crud.get_note(db, note_id=_note_update.note_id)
     return update_note
-
 
 # 노트 삭제
 @router.delete("/notes/delete", status_code=status.HTTP_204_NO_CONTENT, tags=["notes"])

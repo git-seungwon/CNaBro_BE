@@ -87,11 +87,10 @@ class Tag(Base):
     '''
         필수 데이터
 
-        note_id, tag_name
+        tag_name
     '''
     
     id = Column(Integer, primary_key=True, autoincrement=True, comment='태그 고유번호')
-    note_id = Column(Integer, ForeignKey('note.id'), nullable=False, comment='노트 고유번호')
     tag_name = Column(String(8), nullable=False, comment='태그 이름')
 
     tag_note = relationship("tag_note", back_populates="tags")

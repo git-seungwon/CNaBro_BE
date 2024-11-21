@@ -4,7 +4,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 from fastapi import HTTPException
-from api.domain.user.user_schema import SocialMember, SnsType
+from api.domain.user.user_schema import SnsType
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")

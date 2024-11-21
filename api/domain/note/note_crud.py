@@ -6,6 +6,10 @@ from sqlalchemy.orm import selectinload
 from api.models.ORM import Note, User
 from api.domain.note import note_schema
 
+async def upload_note(note:Note):
+    ''' upload note content to vector store '''
+    pass
+
 async def search_notes(db: AsyncSession, user: User, skip: int = 0, limit: int = 10, keyword: str = ''):
     query = select(Note).filter(Note.user_id == user.user_id)
     
@@ -26,7 +30,13 @@ async def get_note(db: AsyncSession, note_id: int):
     return qeustion.scalar_one_or_none()
 
 async def create_note(db: AsyncSession, note_create: note_schema.NoteCreate, user: User):
-    db_note = Note(content=note_create.content, user_id=user.user_id)
+    db_note = Note(
+        content=note_create.content, 
+        start_time=note_create.start_time,
+        end_time=note_create.end_time,
+        user_id=user.user_id
+        )
+    
     db.add(db_note)
     await db.commit()
     await db.refresh(db_note)
@@ -34,7 +44,7 @@ async def create_note(db: AsyncSession, note_create: note_schema.NoteCreate, use
 async def update_note(db: AsyncSession, db_note: Note, note_update: note_schema.NoteUpdate):
     if note_update.content is not None:   
         db_note.content = note_update.content
-    db_note.edit_at = datetime.now()
+    db_note.update_at = datetime.now()
     db.add(db_note)
     await db.commit()
     await db.refresh(db_note)
