@@ -85,7 +85,7 @@ async def auth_callback(provider: user_schema.SnsType, code: str, db: AsyncSessi
         case "google":
             auth_google:user_schema.SocialMember = await user_login_handler.auth_google(code)
             if auth_google is not None:
-                user_sub = auth_google.provider_id
+                user_sub = auth_google["sub"]
                 user_data = await user_crud.get_user_by_sub(db, user_sub)
 
                 if not user_data:
@@ -93,7 +93,6 @@ async def auth_callback(provider: user_schema.SnsType, code: str, db: AsyncSessi
                 user_info = await user_crud.get_user_by_sub(db, user_sub)
 
                 access_token = jwt.encode(auth_google, SECRET_KEY, algorithm=ALGORITHM)
-
                 return user_schema.Token(
                     user_id=user_info.user_id,
                     access_token=access_token,
@@ -113,10 +112,6 @@ async def get_current_user(token = Depends(oauth2_scheme), token2 = Depends(goog
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        # exp = payload.get("exp")
-        # if datetime.now() >= exp:
-        #     # 토큰 만료로 인한 재발급
-        #     pass
 
         provider_type = payload.get("provider_type")
         user_id: str = payload.get("sub")
@@ -128,7 +123,6 @@ async def get_current_user(token = Depends(oauth2_scheme), token2 = Depends(goog
                 if user is None:
                     raise credentials_exception
                 return user
-
         else:
             if user_id is None:
                 raise credentials_exception

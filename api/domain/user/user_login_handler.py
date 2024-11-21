@@ -36,7 +36,7 @@ async def auth_google(code: str):
                 "exp": id_info["exp"],
                 "provider_type": SnsType.google
             }
-            
+        
             return data
         return None
     
